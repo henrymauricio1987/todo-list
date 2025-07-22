@@ -17,6 +17,7 @@ function App() {
       <section className="todo-section">
         <TodoForm />
         <TodoList />
+
       </section>
 
       {/* Contador simple */}
@@ -24,12 +25,16 @@ function App() {
         <button onClick={() => setCount(count + 1)} className="count-button">
           Count is {count}
         </button>
+
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
+
       </footer>
     </div>
+
   );
+
 }
 
 export default App;
