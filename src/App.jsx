@@ -13,22 +13,13 @@ function App() {
         <p className="subtitle">Stay organized and productive</p>
       </header>
 
-      {/* Formulario para agregar todos */}
       <section className="todo-section">
         <TodoForm />
         <TodoList />
 
       </section>
 
-      {/* Contador simple */}
       <footer className="footer">
-        <button onClick={() => setCount(count + 1)} className="count-button">
-          Count is {count}
-        </button>
-
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
 
       </footer>
     </div>
