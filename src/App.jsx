@@ -3,8 +3,7 @@ import TodoList from './TodoList';
 import { useState } from 'react';
 
 function App() {
-  const [newTodo /*, setNewTodo */] = useState("Learn React");
-
+  const [newTodo, setNewTodo] = useState("Learn React");
 
   return (
     <div className="container">
@@ -14,11 +13,11 @@ function App() {
 
       <section className="todo-section">
         <TodoForm />
-        <p>Example text</p>
+        <p>This is my form</p>
         <TodoList />
 
-
         <p>{newTodo}</p>
+        <p>{setNewTodo}</p>
 
       </section>
     </div>

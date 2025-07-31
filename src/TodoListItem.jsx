@@ -1,5 +1,6 @@
 function TodoListItem({ todo }) {
-    return <li>{todo.title}</li>;
+    return <li>{todo.id}{todo.space}{todo.title} </li>
+
 }
 
 export default TodoListItem;
