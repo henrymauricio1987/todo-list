@@ -1,5 +1,5 @@
 function TodoListItem({ todo }) {
-    return <li>{todo.id}{todo.space}{todo.title} </li>
+    return <li>{todo.id}{todo.title} </li>
 
 }
 
