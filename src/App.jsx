@@ -13,6 +13,7 @@ function App() {
 
       <section className="todo-section">
         <TodoForm />
+        <p>this is my form</p>
         <p>{newTodo}</p>
         <TodoList />
 
