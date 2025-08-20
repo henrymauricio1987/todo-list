@@ -1,3 +1,4 @@
+import MyForm from './MyForm';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 import { useState } from 'react';
@@ -22,6 +23,7 @@ function App() {
       <section className="todo-section">
         <TodoForm onAddTodo={addTodo} />
         <TodoList todolist={todolist} /> {/* ✅ Passing the state here */}
+        <MyForm />
       </section>
     </div>
   );
