@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 
 function MyForm() {
-    // Estado del formulario
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         message: "",
     });
 
-    // Estado de errores
     const [errors, setErrors] = useState({});
 
-    // Maneja cambios en los inputs
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // Validación simple
+
     const validate = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = "El nombre es requerido";
@@ -26,7 +25,7 @@ function MyForm() {
         return newErrors;
     };
 
-    // Maneja envío del formulario
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const validationErrors = validate();
