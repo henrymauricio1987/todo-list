@@ -1,4 +1,3 @@
-// src/TodoForm.jsx
 import React, { useRef } from 'react';
 
 const TodoForm = ({ onAddTodo }) => {
@@ -24,7 +23,7 @@ const TodoForm = ({ onAddTodo }) => {
                 type="text"
                 id="todoTitle"
                 name="title"
-                ref={todoTitleInput} // 📌 Attach the ref here
+                ref={todoTitleInput}
             />
             <button type="submit">Add Todo</button>
         </form>
