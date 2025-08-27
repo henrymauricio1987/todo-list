@@ -1,7 +1,18 @@
+import MyForm from './MyForm';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
+import { useState } from 'react';
 
 function App() {
+  const [todolist, setTodoList] = useState([]);
+
+  const addTodo = (title) => {
+    const newTodo = {
+      title: title,
+      id: Date.now()
+    };
+    setTodoList([...todolist, newTodo]);
+  };
 
   return (
     <div className="container">
@@ -10,12 +21,12 @@ function App() {
       </header>
 
       <section className="todo-section">
-        <TodoForm />
-        <TodoList />
-
+        <TodoForm onAddTodo={addTodo} />
+        <TodoList todolist={todolist} /> {/* ✅ Passing the state here */}
+        <MyForm />
       </section>
     </div>
   );
 }
 
-export default App;
+export default App;;
