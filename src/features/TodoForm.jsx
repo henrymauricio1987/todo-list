@@ -1,29 +1,27 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from "react";
+import TextInputWithLabel from "../shared/TextInputWithLabel";
 
 const TodoForm = ({ onAddTodo }) => {
-
+    const [todoTitle, setTodoTitle] = useState("");
     const todoTitleInput = useRef(null);
 
     function handleAddTodo(event) {
         event.preventDefault();
 
-        const title = event.target.title.value;
-
-        onAddTodo(title);
-
-        event.target.title.value = "";
+        onAddTodo(todoTitle);
+        setTodoTitle("");
 
         todoTitleInput.current.focus();
     }
 
     return (
         <form onSubmit={handleAddTodo}>
-            <label htmlFor="todoTitle">Todo</label>
-            <input
-                type="text"
-                id="todoTitle"
-                name="title"
+            <TextInputWithLabel
+                elementId="todoTitle"
+                labelText="Todo"
                 ref={todoTitleInput}
+                value={todoTitle}
+                onChange={(e) => setTodoTitle(e.target.value)}
             />
             <button type="submit">Add Todo</button>
         </form>
