@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import TextInputWithLabel from "../../shared/TextInputWithLabel";
-
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     const [isEditing, setIsEditing] = useState(false);
     const [workingTitle, setWorkingTitle] = useState(todo.title);
+
+    // ref para el input
+    const inputRef = useRef(null);
+
+    // cuando se entra en modo edición → enfocar input
+    useEffect(() => {
+        if (isEditing && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isEditing]);
 
     function handleEdit(event) {
         setWorkingTitle(event.target.value);
@@ -16,9 +25,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     }
 
     function handleUpdate(event) {
-        if (!isEditing) return; // solo actualizamos si estamos en modo edición
+        if (!isEditing) return;
         event.preventDefault();
-
         onUpdateTodo({ ...todo, title: workingTitle });
         setIsEditing(false);
     }
@@ -33,6 +41,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                             labelText="Edit Todo"
                             value={workingTitle}
                             onChange={handleEdit}
+                            inputRef={inputRef}
                         />
                         <button type="button" onClick={handleCancel}>
                             Cancel
