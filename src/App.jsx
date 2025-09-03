@@ -15,7 +15,6 @@ function App() {
     setTodoList([...todolist, newTodo]);
   };
 
-  // NUEVO: función para actualizar un todo
   const updateTodo = (editedTodo) => {
     const updatedTodos = todolist.map((todo) =>
       todo.id === editedTodo.id ? { ...editedTodo } : todo
@@ -23,9 +22,10 @@ function App() {
     setTodoList(updatedTodos);
   };
 
+  // ✅ Now always sets isCompleted to true
   const completeTodo = (id) => {
     const updatedTodos = todolist.map((todo) =>
-      todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+      todo.id === id ? { ...todo, isCompleted: true } : todo
     );
     setTodoList(updatedTodos);
   };
@@ -38,7 +38,6 @@ function App() {
 
       <section className="todo-section">
         <TodoForm onAddTodo={addTodo} />
-        {/* Pasamos updateTodo y completeTodo a la lista */}
         <TodoList
           todolist={todolist}
           onUpdateTodo={updateTodo}
