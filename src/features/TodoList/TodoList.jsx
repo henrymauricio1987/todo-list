@@ -1,6 +1,10 @@
 import TodoListItem from "./TodoListItem";
 
-function TodoList({ todolist, onUpdateTodo, onCompleteTodo }) {
+function TodoList({ todolist, onUpdateTodo, onCompleteTodo, isLoading }) {
+    if (isLoading) {
+        return <p>Todo list loading...</p>; // ✅ show loading
+    }
+
     return (
         <>
             {todolist.length === 0 ? (
