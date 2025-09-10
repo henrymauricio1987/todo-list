@@ -3,14 +3,16 @@ import TodoForm from './features/TodoForm';
 import TodoList from './features/TodoList/TodoList';
 import { useState, useEffect } from 'react';
 
+
+const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+const token = `Bearer ${import.meta.env.VITE_PAT}`;
+
 function App() {
   const [todolist, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-  const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   // ✅ Load todos on mount
   useEffect(() => {
@@ -29,10 +31,14 @@ function App() {
         const { records } = await resp.json();
 
         const fetchedTodos = records.map((record) => {
-          const todo = { id: record.id, ...record.fields };
-          if (!todo.isCompleted) todo.isCompleted = false;
-          return todo;
+          const fields = record.fields;
+          return {
+            id: record.id,
+            ...fields,
+            isCompleted: fields.isCompleted ?? false,
+          };
         });
+
 
         setTodoList(fetchedTodos);
       } catch (error) {
@@ -99,8 +105,11 @@ function App() {
 
     // Optimistically update UI
     const updatedTodos = todolist.map((todo) =>
-      todo.id === editedTodo.id ? { ...editedTodo } : todo
+      todo.id === editedTodo.id
+        ? { ...editedTodo, isCompleted: editedTodo.isCompleted ?? false }
+        : todo
     );
+
     setTodoList(updatedTodos);
 
     const payload = {
@@ -133,8 +142,9 @@ function App() {
 
       // Rollback if failure
       const revertedTodos = todolist.map((todo) =>
-        todo.id === originalTodo.id ? originalTodo : todo
+        todo.id === originalTodo.id ? { ...originalTodo } : todo
       );
+
       setTodoList(revertedTodos);
     } finally {
       setIsSaving(false);
