@@ -1,42 +1,73 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* src/App.css */
+
+body {
+  font-family: sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.card {
-  padding: 2em;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.read-the-docs {
-  color: #888;
+li {
+  background: white;
+  margin: 5px auto;
+  padding: 10px;
+  max-width: 400px;
+  border-radius: 4px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #777;
+}
+
+.todo-section {
+  margin-bottom: 30px;
+}
+
+.footer {
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
 }

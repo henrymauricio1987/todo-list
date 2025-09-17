@@ -48,9 +48,12 @@ function App() {
 
         const { records } = await resp.json();
         const fetchedTodos = records.map((record) => {
-          const todo = { id: record.id, ...record.fields };
-          if (!todo.isCompleted) todo.isCompleted = false;
-          return todo;
+          const fields = record.fields;
+          return {
+            id: record.id,
+            ...fields,
+            isCompleted: fields.isCompleted ?? false,
+          };
         });
 
         setTodoList(fetchedTodos);
@@ -100,8 +103,11 @@ function App() {
     const originalTodo = todolist.find((todo) => todo.id === editedTodo.id);
 
     const updatedTodos = todolist.map((todo) =>
-      todo.id === editedTodo.id ? { ...editedTodo } : todo
+      todo.id === editedTodo.id
+        ? { ...editedTodo, isCompleted: editedTodo.isCompleted ?? false }
+        : todo
     );
+
     setTodoList(updatedTodos);
 
     const payload = { records: [{ id: editedTodo.id, fields: editedTodo }] };
@@ -121,8 +127,9 @@ function App() {
       console.error(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
       const revertedTodos = todolist.map((todo) =>
-        todo.id === originalTodo.id ? originalTodo : todo
+        todo.id === originalTodo.id ? { ...originalTodo } : todo
       );
+
       setTodoList(revertedTodos);
     } finally {
       setIsSaving(false);
