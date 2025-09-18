@@ -1,6 +1,10 @@
 import TodoListItem from "./TodoListItem";
 
 function TodoList({ todolist, onUpdateTodo, onCompleteTodo, isLoading }) {
+    if (isLoading) {
+        return <p>Todo list loading...</p>; // ✅ show loading
+    }
+
     return (
         <>
             {todolist.length === 0 ? (
@@ -17,9 +21,6 @@ function TodoList({ todolist, onUpdateTodo, onCompleteTodo, isLoading }) {
                     ))}
                 </ul>
             )}
-
-            {/* Subtle spinner instead of blocking message */}
-            {isLoading && <p style={{ fontSize: "0.9rem", color: "#888" }}>Refreshing…</p>}
         </>
     );
 }
