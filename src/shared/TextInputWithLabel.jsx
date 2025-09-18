@@ -1,21 +1,12 @@
-import React, { forwardRef } from "react";
+import React from "react";
 
-const TextInputWithLabel = forwardRef(
-    ({ elementId, labelText, value, onChange }, ref) => {
-        return (
-            <>
-                <label htmlFor={elementId}>{labelText}</label>
-                <input
-                    type="text"
-                    id={elementId}
-                    ref={ref}
-                    value={value}
-                    onChange={onChange}
-                    name="title"
-                />
-            </>
-        );
-    }
+const TextInputWithLabel = React.forwardRef(
+    ({ elementId, labelText, value, onChange }, ref) => (
+        <div className="form-control">
+            <label htmlFor={elementId}>{labelText}</label>
+            <input id={elementId} ref={ref} type="text" value={value} onChange={onChange} />
+        </div>
+    )
 );
 
 export default TextInputWithLabel;

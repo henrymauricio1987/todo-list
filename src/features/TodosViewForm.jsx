@@ -1,54 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 
-const TodosViewForm = ({
+function TodosViewForm({
     sortField,
     setSortField,
     sortDirection,
     setSortDirection,
     queryString,
     setQueryString,
-    onSubmit
-}) => {
+    onSubmit,
+}) {
+    const [localQueryString, setLocalQueryString] = useState(queryString);
+
+    useEffect(() => {
+        const debounce = setTimeout(() => {
+            setQueryString(localQueryString);
+        }, 500);
+
+        return () => clearTimeout(debounce);
+    }, [localQueryString, setQueryString]);
+
     return (
         <form onSubmit={onSubmit}>
-            {/* Search */}
-            <div className="search-control">
-                <label htmlFor="searchInput">Search todos:</label>
+            <div>
+                <label htmlFor="search">Buscar todos:</label>
                 <input
+                    id="search"
                     type="text"
-                    id="searchInput"
-                    value={queryString}
-                    onChange={(e) => setQueryString(e.target.value)}
+                    value={localQueryString}
+                    onChange={(e) => setLocalQueryString(e.target.value)}
                 />
-                <button type="button" onClick={() => setQueryString('')}>
-                    Clear
+                <button type="button" onClick={() => setLocalQueryString("")}>
+                    Borrar
                 </button>
             </div>
 
-            {/* Sort controls */}
-            <div className="view-controls">
-                <label htmlFor="sortField">Sort by</label>
+            <div>
+                <label htmlFor="sortField">Ordenar por:</label>
                 <select
                     id="sortField"
                     value={sortField}
                     onChange={(e) => setSortField(e.target.value)}
                 >
-                    <option value="title">Title</option>
-                    <option value="createdTime">Time added</option>
+                    <option value="createdTime">Fecha de creación</option>
+                    <option value="title">Título</option>
                 </select>
 
-                <label htmlFor="sortDirection">Direction</label>
                 <select
                     id="sortDirection"
                     value={sortDirection}
                     onChange={(e) => setSortDirection(e.target.value)}
                 >
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
                 </select>
             </div>
         </form>
     );
-};
+}
 
 export default TodosViewForm;
