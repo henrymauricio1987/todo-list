@@ -1,24 +1,26 @@
 import React from "react";
 import TodoListItem from "./TodoListItem";
+import styles from "./TodoList.module.css";
 
-function TodoList({ todolist, onUpdateTodo, onCompleteTodo, isLoading }) {
+function TodoList({ todolist, onUpdateTodo, onCompleteTodo, onDeleteTodo, isLoading }) {
     return (
         <>
             {todolist.length === 0 ? (
-                <p>Add todo above to get started</p>
+                <p className={styles.emptyMessage}>Add todo above to get started</p>
             ) : (
-                <ul>
+                <ul className={styles.todoList}>
                     {todolist.map((todo) => (
                         <TodoListItem
                             key={todo.id}
                             todo={todo}
                             onUpdateTodo={onUpdateTodo}
                             onCompleteTodo={onCompleteTodo}
+                            onDeleteTodo={onDeleteTodo}
                         />
                     ))}
                 </ul>
             )}
-            {isLoading && <p style={{ fontSize: "0.9rem", color: "#888" }}>Refreshing…</p>}
+            {isLoading && <p className={styles.loadingMessage}>Refreshing…</p>}
         </>
     );
 }

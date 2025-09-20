@@ -1,15 +1,16 @@
-import MyForm from './MyForm';
 import TodoForm from './features/TodoForm';
 import TodoList from './features/TodoList/TodoList';
 import TodosViewForm from './features/TodosViewForm';
 import { useState, useEffect } from 'react';
+import styles from './App.module.css';
 
 // Airtable token
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
 // ✅ Utility function updated to include queryString
+const baseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+
 const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-  const baseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
 
   let searchQuery = '';
@@ -25,6 +26,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Sorting state
   const [sortField, setSortField] = useState("createdTime");
@@ -76,10 +78,7 @@ function App() {
 
     try {
       setIsSaving(true);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(baseUrl, options);
       if (!resp.ok) throw new Error(resp.statusText || "Failed to save todo");
 
       const { records } = await resp.json();
@@ -87,6 +86,7 @@ function App() {
       if (!savedTodo.isCompleted) savedTodo.isCompleted = false;
 
       setTodoList([...todolist, savedTodo]);
+      setSuccessMessage("Todo added successfully");
     } catch (error) {
       console.error(error);
       setErrorMessage(error.message);
@@ -112,11 +112,10 @@ function App() {
     };
 
     try {
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      setIsSaving(true);
+      const resp = await fetch(baseUrl, options);
       if (!resp.ok) throw new Error(resp.statusText || "Failed to update todo");
+      setSuccessMessage("Todo updated successfully");
     } catch (error) {
       console.error(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
@@ -138,22 +137,39 @@ function App() {
     updateTodo(completedTodo);
   };
 
+  // ✅ Delete todo
+  const deleteTodo = async (id) => {
+    const options = { method: "DELETE", headers: { Authorization: token } };
+
+    try {
+      const resp = await fetch(`${baseUrl}/${id}`, options);
+      if (!resp.ok) throw new Error(resp.statusText || "Failed to delete todo");
+
+      setTodoList(todolist.filter((todo) => todo.id !== id));
+      setSuccessMessage("Todo deleted successfully");
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(error.message);
+    }
+  };
+
   // Prevent form refresh
   const preventRefresh = (e) => e.preventDefault();
 
   return (
-    <div className="container">
-      <header className="header">
+    <div className={styles.container}>
+      <header className={styles.header}>
         <h1>📝 My Todo List 📝</h1>
       </header>
 
-      <section className="todo-section">
+      <section className={styles.todoSection}>
         <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
 
         <TodoList
           todolist={todolist}
           onUpdateTodo={updateTodo}
           onCompleteTodo={completeTodo}
+          onDeleteTodo={deleteTodo}
           isLoading={isLoading}
         />
 
@@ -170,14 +186,19 @@ function App() {
           onSubmit={preventRefresh}
         />
 
+        {successMessage && (
+          <div className={styles.success} aria-live="polite">
+            <p>{successMessage}</p>
+            <button onClick={() => setSuccessMessage("")}>Dismiss</button>
+          </div>
+        )}
+
         {errorMessage && (
-          <div className="error">
+          <div className={styles.error} aria-live="assertive">
             <p>{errorMessage}</p>
             <button onClick={() => setErrorMessage("")}>Dismiss</button>
           </div>
         )}
-
-        <MyForm />
       </section>
     </div>
   );

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import TextInputWithLabel from "../../shared/TextInputWithLabel";
+import styles from "./TodoListItem.module.css";
 
-function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
+function TodoListItem({ todo, onCompleteTodo, onUpdateTodo, onDeleteTodo }) {
     const [isEditing, setIsEditing] = useState(false);
     const [workingTitle, setWorkingTitle] = useState(todo.title);
     const inputRef = useRef(null);
@@ -27,8 +28,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     };
 
     return (
-        <li>
-            <form onSubmit={handleUpdate}>
+        <li className={styles.todoItem}>
+            <form onSubmit={handleUpdate} className={styles.editForm}>
                 {isEditing ? (
                     <>
                         <TextInputWithLabel
@@ -38,12 +39,12 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                             onChange={handleEdit}
                             ref={inputRef}
                         />
-                        <button type="button" onClick={handleCancel}>Cancel</button>
-                        <button type="submit">Update</button>
+                        <button type="button" onClick={handleCancel} className={styles.cancelButton}>Cancel</button>
+                        <button type="submit" className={styles.updateButton}>Update</button>
                     </>
                 ) : (
                     <>
-                        <label>
+                        <label className={styles.checkboxLabel}>
                             <input
                                 type="checkbox"
                                 id={`checkbox${todo.id}`}
@@ -51,7 +52,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                                 onChange={() => onCompleteTodo(todo.id)}
                             />
                         </label>
-                        <span onClick={() => setIsEditing(true)}>{todo.title}</span>
+                        <span onClick={() => setIsEditing(true)} className={`${styles.todoTitle} ${todo.isCompleted ? styles.completed : ''}`}>{todo.title}</span>
+                        <button onClick={() => onDeleteTodo(todo.id)} className={styles.deleteButton}>Delete</button>
                     </>
                 )}
             </form>
