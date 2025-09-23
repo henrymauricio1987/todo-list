@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components'; // ✅ Make sure to import styled!
 
 const StyledForm = styled.form`
   display: flex;
@@ -71,65 +71,70 @@ const StyledButton = styled.button`
 `;
 
 function TodosViewForm({
-    sortField,
-    setSortField,
-    sortDirection,
-    setSortDirection,
-    queryString,
-    setQueryString,
-    onSubmit,
+  sortField,
+  setSortField,
+  sortDirection,
+  setSortDirection,
+  queryString,
+  setQueryString,
+  onSubmit
 }) {
-    const [localQueryString, setLocalQueryString] = useState(queryString);
+  // Local state for debounced search input
+  const [localQueryString, setLocalQueryString] = useState(queryString);
 
-    useEffect(() => {
-        const debounce = setTimeout(() => {
-            setQueryString(localQueryString);
-        }, 500);
+  // Debounce effect - updates parent state after 500ms delay
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setQueryString(localQueryString);
+    }, 500);
 
-        return () => clearTimeout(debounce);
-    }, [localQueryString, setQueryString]);
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [localQueryString, setQueryString]);
 
-    return (
-        <StyledForm onSubmit={onSubmit}>
-            <StyledFormGroup>
-                <StyledLabel htmlFor="search">Search todos:</StyledLabel>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <StyledInput
-                        id="search"
-                        type="text"
-                        value={localQueryString}
-                        onChange={(e) => setLocalQueryString(e.target.value)}
-                    />
-                    <StyledButton type="button" onClick={() => setLocalQueryString("")}>
-                        Clear
-                    </StyledButton>
-                </div>
-            </StyledFormGroup>
+  return (
+    <StyledForm onSubmit={onSubmit}>
+      {/* Search */}
+      <StyledFormGroup>
+        <StyledLabel htmlFor="searchInput">Search todos:</StyledLabel>
+        <StyledInput
+          type="text"
+          id="searchInput"
+          value={localQueryString}
+          onChange={(e) => setLocalQueryString(e.target.value)}
+        />
+        <StyledButton type="button" onClick={() => setLocalQueryString('')}>
+          Clear
+        </StyledButton>
+      </StyledFormGroup>
 
-            <StyledFormGroup>
-                <StyledLabel htmlFor="sortField">Sort by:</StyledLabel>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <StyledSelect
-                        id="sortField"
-                        value={sortField}
-                        onChange={(e) => setSortField(e.target.value)}
-                    >
-                        <option value="createdTime">Creation date</option>
-                        <option value="title">Title</option>
-                    </StyledSelect>
+      {/* Sort controls */}
+      <StyledFormGroup>
+        <StyledLabel htmlFor="sortField">Sort by:</StyledLabel>
+        <StyledSelect
+          id="sortField"
+          value={sortField}
+          onChange={(e) => setSortField(e.target.value)}
+        >
+          <option value="title">Title</option>
+          <option value="createdTime">Time added</option>
+        </StyledSelect>
+      </StyledFormGroup>
 
-                    <StyledSelect
-                        id="sortDirection"
-                        value={sortDirection}
-                        onChange={(e) => setSortDirection(e.target.value)}
-                    >
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </StyledSelect>
-                </div>
-            </StyledFormGroup>
-        </StyledForm>
-    );
+      <StyledFormGroup>
+        <StyledLabel htmlFor="sortDirection">Direction:</StyledLabel>
+        <StyledSelect
+          id="sortDirection"
+          value={sortDirection}
+          onChange={(e) => setSortDirection(e.target.value)}
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </StyledSelect>
+      </StyledFormGroup>
+    </StyledForm>
+  );
 }
 
 export default TodosViewForm;
