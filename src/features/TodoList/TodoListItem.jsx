@@ -1,46 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
 import TextInputWithLabel from "../../shared/TextInputWithLabel";
+import styles from "./TodoListItem.module.css";
 
-function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
+function TodoListItem({ todo, onCompleteTodo, onUpdateTodo, onDeleteTodo }) {
     const [isEditing, setIsEditing] = useState(false);
     const [workingTitle, setWorkingTitle] = useState(todo.title);
-
-    // ref for input
     const inputRef = useRef(null);
 
-    // ✅ When editing starts → auto-focus input
     useEffect(() => {
-        if (isEditing && inputRef.current) {
-            inputRef.current.focus();
-        }
+        if (isEditing && inputRef.current) inputRef.current.focus();
     }, [isEditing]);
 
-    // ✅ Keep local title synced with latest todo from props
     useEffect(() => {
         setWorkingTitle(todo.title);
     }, [todo]);
 
-    function handleEdit(event) {
-        setWorkingTitle(event.target.value);
-    }
-
-    function handleCancel() {
+    const handleEdit = (e) => setWorkingTitle(e.target.value);
+    const handleCancel = () => {
         setWorkingTitle(todo.title);
         setIsEditing(false);
-    }
-
-    function handleUpdate(event) {
-        event.preventDefault();
+    };
+    const handleUpdate = (e) => {
+        e.preventDefault();
         if (!isEditing) return;
-
-        // send updated todo to parent (App.jsx)
         onUpdateTodo({ ...todo, title: workingTitle });
         setIsEditing(false);
-    }
+    };
 
     return (
-        <li>
-            <form onSubmit={handleUpdate}>
+        <li className={styles.todoItem}>
+            <form onSubmit={handleUpdate} className={styles.editForm}>
                 {isEditing ? (
                     <>
                         <TextInputWithLabel
@@ -48,18 +37,14 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                             labelText="Edit Todo"
                             value={workingTitle}
                             onChange={handleEdit}
-                            inputRef={inputRef}
+                            ref={inputRef}
                         />
-                        <button type="button" onClick={handleCancel}>
-                            Cancel
-                        </button>
-                        <button type="submit">
-                            Update
-                        </button>
+                        <button type="button" onClick={handleCancel} className={styles.cancelButton}>Cancel</button>
+                        <button type="submit" className={styles.updateButton}>Update</button>
                     </>
                 ) : (
                     <>
-                        <label>
+                        <label className={styles.checkboxLabel}>
                             <input
                                 type="checkbox"
                                 id={`checkbox${todo.id}`}
@@ -67,9 +52,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                                 onChange={() => onCompleteTodo(todo.id)}
                             />
                         </label>
-                        <span onClick={() => setIsEditing(true)}>
-                            {todo.title}
-                        </span>
+                        <span onClick={() => setIsEditing(true)} className={`${styles.todoTitle} ${todo.isCompleted ? styles.completed : ''}`}>{todo.title}</span>
+                        <button onClick={() => onDeleteTodo(todo.id)} className={styles.deleteButton}>Delete</button>
                     </>
                 )}
             </form>

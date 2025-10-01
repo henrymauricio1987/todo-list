@@ -1,0 +1,20 @@
+/* TodoList Module Styles */
+.todoList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.emptyMessage {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 2rem;
+}
+
+.loadingMessage {
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    padding: 1rem;
+}
