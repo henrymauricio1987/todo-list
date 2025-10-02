@@ -1,7 +1,9 @@
-import TodoForm from './features/TodoForm';
-import TodoList from './features/TodoList/TodoList';
-import TodosViewForm from './features/TodosViewForm';
+import TodosPage from './pages/TodosPage';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
+import Header from './shared/Header';
 import { useState, useEffect, useReducer } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import styles from './App.module.css';
 import {
   reducer as todosReducer,
@@ -29,6 +31,7 @@ const encodeUrl = ({ sortField, sortDirection, queryString }) => {
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
   const [successMessage, setSuccessMessage] = useState("");
+  const [title, setTitle] = useState("Todo List");
 
   // Sorting state
   const [sortField, setSortField] = useState("createdTime");
@@ -36,6 +39,24 @@ function App() {
 
   // ✅ Search state
   const [queryString, setQueryString] = useState("");
+
+  // Get current location for title updates
+  const location = useLocation();
+
+  // Update title based on current route
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/":
+        setTitle("Todo List");
+        break;
+      case "/about":
+        setTitle("About");
+        break;
+      default:
+        setTitle("Not Found");
+        break;
+    }
+  }, [location]);
 
   // Load todos when sort or search changes
   useEffect(() => {
@@ -140,48 +161,35 @@ function App() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>📝 My Todo List 📝</h1>
-      </header>
+      <Header title={title} />
 
-      <section className={styles.todoSection}>
-        <TodoForm onAddTodo={addTodo} isSaving={todoState.isSaving} />
-
-        <TodoList
-          todolist={todoState.todoList}
-          onUpdateTodo={updateTodo}
-          onCompleteTodo={completeTodo}
-          onDeleteTodo={deleteTodo}
-          isLoading={todoState.isLoading}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <TodosPage
+              todoState={todoState}
+              onAddTodo={addTodo}
+              onUpdateTodo={updateTodo}
+              onCompleteTodo={completeTodo}
+              onDeleteTodo={deleteTodo}
+              sortField={sortField}
+              setSortField={setSortField}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+              queryString={queryString}
+              setQueryString={setQueryString}
+              successMessage={successMessage}
+              setSuccessMessage={setSuccessMessage}
+              dispatch={dispatch}
+              todoActions={todoActions}
+              preventRefresh={preventRefresh}
+            />
+          }
         />
-
-        <hr />
-
-        {/* TodosViewForm with search */}
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-          queryString={queryString}
-          setQueryString={setQueryString}
-          onSubmit={preventRefresh}
-        />
-
-        {successMessage && (
-          <div className={styles.success} aria-live="polite">
-            <p>{successMessage}</p>
-            <button onClick={() => setSuccessMessage("")}>Dismiss</button>
-          </div>
-        )}
-
-        {todoState.errorMessage && (
-          <div className={styles.error} aria-live="assertive">
-            <p>{todoState.errorMessage}</p>
-            <button onClick={() => dispatch({ type: todoActions.clearError })}>Dismiss</button>
-          </div>
-        )}
-      </section>
+        <Route path="/about" element={<About />} />
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
     </div>
   );
 }
